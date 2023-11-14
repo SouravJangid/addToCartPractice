@@ -40,23 +40,11 @@ for (let i = 0; i < carsts.length; i++) {
 for (let i = 0; i < carsts.length; i++) {
     console.log("I am running.");
     carsts[i].addEventListener('click', () => {
-        cartNumbers(products[i]);
+        setItem(products[i]);
         totalCost(products[i]);
     })
 }
 
-
-function cartNumbers(products) {
-
-    let productNumbers = localStorage.getItem('cartNumbers');
-    productNumbers = parseInt(productNumbers);
-    if (productNumbers) {
-        localStorage.setItem('cartNumbers', productNumbers + 1);
-    } else {
-        localStorage.setItem('cartNumbers', 1);
-    }
-    setItem(products);
-}
 
 function setItem(products) {
     let cartItems = localStorage.getItem("productsInCart");
@@ -64,18 +52,18 @@ function setItem(products) {
 
 
     if (cartItems != null) {
-        if (cartItems[products.nam] == undefined) {
+        if (cartItems[products.id] == undefined) {
             cartItems = {
                 ...cartItems,
-                [products.nam]: products
+                [products.id]: products
             }
         }
-        cartItems[products.nam].incart += 1;
+        cartItems[products.id].incart += 1;
 
     } else {
         products.incart = 1;
         cartItems = {
-            [products.nam]: products
+            [products.id]: products
         }
     }
     localStorage.setItem("productsInCart", JSON.stringify(cartItems));
