@@ -1,6 +1,8 @@
 const bar = document.getElementById('bar');
 const nav = document.getElementById('navbar');
 const close = document.getElementById('close');
+
+
 if (bar) {
     bar.addEventListener('click', (e) => {
         nav.classList.add('active');
@@ -30,8 +32,8 @@ for (let i = 0; i < carsts.length; i++) {
     obj.img = image;
     obj.nam = name;
     obj.pri = prise;
-    obj.id = i;
     obj.incart = 0;
+    obj.id = i;
     products.push(obj);
 }
 
@@ -59,7 +61,7 @@ function cartNumbers(products) {
 function setItem(products) {
     let cartItems = localStorage.getItem("productsInCart");
     cartItems = JSON.parse(cartItems);
-    
+
 
     if (cartItems != null) {
         if (cartItems[products.nam] == undefined) {
@@ -81,12 +83,12 @@ function setItem(products) {
 
 function totalCost(product) {
     let money = product.pri.replace("$", "");
-    money = parseFloat(money);    
+    money = parseFloat(money);
     let preCost = localStorage.getItem('totalCost');
-    
+
     if (preCost != null) {
         preCost = parseInt(preCost);
-        localStorage.setItem('totalCost', preCost+money);
+        localStorage.setItem('totalCost', preCost + money);
     } else {
         localStorage.setItem('totalCost', money);
     }
@@ -99,13 +101,16 @@ function displayCart() {
     let cartItems = localStorage.getItem('productsInCart');
     cartItems = JSON.parse(cartItems);
     let productContainer = document.querySelector('.add-cart-in-table');
-    if (cartItems && productContainer){
+    if (cartItems && productContainer) {
+
+
+
         productContainer.innerHTML = '';
-        Object.values(cartItems).map(item => {  
-            productContainer.innerHTML +=`
+        Object.values(cartItems).map(item => {
+            productContainer.innerHTML += `
             <tr>
             <td>
-            <a href="#"><span class="material-symbols-outlined">
+            <a href="#"><span onClick='deleteItem(${item.id})' class="deleteItem material-symbols-outlined">
             close_small
             </span></a>
             </td>
@@ -117,24 +122,56 @@ function displayCart() {
             `
         });
     }
-    preCost = localStorage.getItem('totalCost');
+
+    let preCost = localStorage.getItem('totalCost');
     let productContaine = document.querySelector('.totalamount');
-    if (preCost && productContaine){
+    if (preCost && productContaine) {
         productContaine.innerHTML = '';
-            productContaine.innerHTML +=`
+        productContaine.innerHTML += `
             <span>$${preCost}</span>
             `
     }
     let roductContaine = document.querySelector('.totalmoney');
-    if (preCost && roductContaine){
+    if (preCost && roductContaine) {
         roductContaine.innerHTML = '';
-            roductContaine.innerHTML +=`
+        roductContaine.innerHTML += `
             <span>$${preCost}</span>
             `
     }
 }
 
+
 displayCart();
+
+// DeleteTheCart
+
+function deleteItem(id) {
+    let cartItems = localStorage.getItem('productsInCart');
+    cartItems = JSON.parse(cartItems);
+    let newCartItems = new Array();
+    // let newCart = cartItems.filter((item)=>item.id != id);
+    let changeamount = 0;
+    let mone;
+    Object.values(cartItems).map(item => {
+        if (item.id != id) {
+            newCartItems.push(item);
+            mone = item.pri.replace("$", "");
+            console.log(mone);
+            mone = parseFloat(mone);
+            changeamount += mone;
+        }
+    });
+    localStorage.setItem('productsInCart', JSON.stringify(newCartItems));
+    localStorage.setItem('totalCost', changeamount.toFixed(2));
+    displayCart();
+}
+
+
+
+
+
+
+
 
 
 
